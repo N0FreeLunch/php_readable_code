@@ -83,7 +83,7 @@ foreach($scoreMap as $pair) {
 👎 Bad
 
 ```php
-// 이 파일에 포함된 행 수를 반환한다.
+// 지정한 파일 데이터의 총 행 수를 반환한다.
 $countLines = function(string filename): int { ... };
 ```
 
@@ -99,7 +99,7 @@ $countLines = function(string filename): int { ... };
 👍 Good
 
 ```php
-// 이 파일에 포함된 줄 바꿈 문자 ('\n')행 수를 반환한다.
+// 지정한 파일에 포함된 줄 바꿈 문자('\n')으로 행을 구분했을 때의 총 행 수를 반환한다.
 $countLines = function(string filename): int { ... };
 ```
 
@@ -200,14 +200,14 @@ $connect(timeout: 10, use_encryption: false)
 👎 Bad
 
 ```
-// 소재지에서 불필요한 공백을 제거 후, "Avenue"를 "Ave." 형식으로 변경
+// 소재지에서 불필요한 공백을 제거 후, "Avenue"를 "Ave." 형식으로 변경한다.
 // 이렇게 하면 표기가 약간 다른 소재지라도 동일한 것으로 식별할 수 있다.
 ```
 
 👍 Good
 
 ```
-// 위치를 정규화 （예："  Avenue   " -> "Ave."）。
+// 소재지를 정규화 （예："  Avenue   " -> "Ave."）
 ```
 
 - 정보의 밀도가 높은 '정규화'라는 용어와 정규화를 어떻게 하는지 예를 드는 것으로 간결하게 표현하면서도 의미를 잘 드러냄
