@@ -105,6 +105,10 @@ $countLines = function(string filename): int { ... };
 
 ## 적절한 예를 주석으로 적는다.
 
+예제가 없어도 어떤 값을 전달하고 어떤 값을 얻는지 쉽게 생각할 수 있다면 굳이 주석으로 예시를 추가할 필요는 없다.
+
+다음 예시는 함수의 형태만 보고서는 매개 변수로 어떤 값을 전달해야 할지, 어떤 값을 반환하는지 알기 어렵기 때문에 주석을 달아주는 것이 좋은 경우이다.
+
 👎 Bad
 
 ```php
@@ -132,7 +136,7 @@ $compareProductByPrice = function(Product $a, Product $b) {
 /**
  * @param array<int, Product> $products
  */
-function displayProducts(array $products) use ($compareProductByPrice): void 
+$displayProducts = function (array $products) use ($compareProductByPrice): void 
 {
     usort($products, $compareProductByPrice);
     
@@ -178,7 +182,7 @@ $connect(timeout: 10, use_encryption: false)
 
 ---
 
-👎 Bad
+👌 SOSO
 
 ```php
 $user->getUserById(userId: 50);
