@@ -251,3 +251,73 @@ function Contains(string $str, string $substr) {
 }
 ```
 
+
+## goto
+
+## 얕은 중첩
+
+👎 Bad
+
+```php
+f ($user_result === SUCCESS) {
+    if ($permission_result !== SUCCESS) {
+        $reply->writeErrors("error reading permissions");
+        $reply->done();
+        return;
+    }
+    $reply->writeErrors("");
+} else {
+    $reply->writeErrors($user_result);
+}
+$reply->done();
+```
+
+👍 Good
+
+```php
+if ($user_result !== SUCCESS) {
+    $reply->writeErrors($user_result);
+    $reply->done();
+    return;
+}
+
+if ($permission_result !== SUCCESS) {
+    $reply->writeErrors($permission_result);
+    $reply->done();
+    return;
+}
+
+$reply->writeErrors();
+$reply->done();
+```
+
+## loop의 중첩
+
+👎 Bad
+
+```php
+$null_count = 0;
+foreach ($results as $result) {
+    if ($result !== null) {
+        $null_count++;
+        if ($result->name !== "") {
+            echo "Considering candidate...\n";
+        }
+    }
+}
+```
+
+👍 Good
+
+```php
+$non_null_count = 0;
+foreach ($results as $result) { 
+    if ($result === null) continue;
+    
+    $non_null_count++;
+    
+    if (empty($result->name)) continue;
+    
+    echo "Considering candidate...\n"; 
+}
+```
