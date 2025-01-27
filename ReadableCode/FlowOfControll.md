@@ -262,11 +262,11 @@ goto 문의 문제점은 코드가 어디로 이동할지 파악하기 어렵다
 ```php
 $sentence = '';
 
-str_replace('str', 'string', $inputValue);
+$sentence .= str_replace('str', 'string', $inputValue);
 
-str_replace('arr', 'array', $inputValue);
+$sentence .= str_replace('arr', 'array', $inputValue);
 
-str_replace('int', 'integer', $inputValue);
+$sentence .= str_replace('int', 'integer', $inputValue);
 
 // ...
 
@@ -286,11 +286,11 @@ if (
     // ...
 ) goto not_chnage;
 
-str_replace('str', 'string', $inputValue);
+$sentence .= str_replace('str', 'string', $inputValue);
 
-str_replace('arr', 'array', $inputValue);
+$sentence .= str_replace('arr', 'array', $inputValue);
 
-str_replace('int', 'integer', $inputValue);
+$sentence .= str_replace('int', 'integer', $inputValue);
 
 // ...
 
