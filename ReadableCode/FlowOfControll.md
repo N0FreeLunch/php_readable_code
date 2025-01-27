@@ -251,8 +251,55 @@ function Contains(string $str, string $substr) {
 }
 ```
 
-
 ## goto
+
+goto 문의 문제점은 코드가 어디로 이동할지 파악하기 어렵다는 문제점이 있다. 코드를 읽기 위해 이리 저리 왔다갔다 해야 해서 코드를 순차적으로 읽어나가는 흐름을 방해할 수 있다.
+
+하지만, 건너 뛰어야 하는 코드가 많은 경우, 다음 코드를 순차적으로 읽는 것 보다는 다음 코드 모두를 무시하고 지정한 부분까지 코드를 읽을 필요가 없다는 것을 알려주기 위해 goto문을 사용할 수 있다.
+
+👎 Bad
+
+```php
+$sentence = '';
+
+str_replace('str', 'string', $inputValue);
+
+str_replace('arr', 'array', $inputValue);
+
+str_replace('int', 'integer', $inputValue);
+
+// ...
+
+$sentence .= $inputValue:
+```
+
+위에서 아래로 순차적으로 읽으면 데이터 변경을 하지 않는 경우도 데이터 변경 코드를 읽어야 한다.
+
+👎 Good
+
+```php
+$sentence = '';
+
+if (
+    is_numeric($inputValue)
+    || $inputValue === ''
+    // ...
+) goto not_chnage;
+
+str_replace('str', 'string', $inputValue);
+
+str_replace('arr', 'array', $inputValue);
+
+str_replace('int', 'integer', $inputValue);
+
+// ...
+
+not_chnage:
+
+$sentence .= $inputValue:
+```
+
+특정한 조건에 대해서는 다음 코드를 읽을 필요가 없다는 것을 알려주기 위해서 goto문을 사용할 수도 있다.
 
 ## 얕은 중첩
 
@@ -321,3 +368,9 @@ foreach ($results as $result) {
     echo "Considering candidate...\n"; 
 }
 ```
+
+## 흐름
+
+일반적으로 코드는 위에서 아래로 읽을 수 있도록 작성된다.
+
+exec를 통한 외부 프로세스 실행, goto 문, 스레드, 예외, (통신 등의) 비동기 등의 코드는 위에서 아래로의 흐름이 아닌 흐름의 코드를 만들 수 있기 때문에 작성 시 주의해야 한다.
