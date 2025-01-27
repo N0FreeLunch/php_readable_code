@@ -88,9 +88,9 @@ if (null === $var) {
 
 ```php
 if ($a !== $b) {
-   ...
+   // ...
 } else {
-   ...
+   // ...
 }
 ```
 
@@ -98,9 +98,9 @@ if ($a !== $b) {
 
 ```php
 if ($a === $b) {
-    ...
+    // ...
 } else {
-    ...
+    // ...
 }
 ```
 
@@ -108,20 +108,17 @@ if ($a === $b) {
 
 else 문의 분기 조건을 확인하기 위해서는 if 문의 조건을 확인할 수 밖에 없고, 조건문을 읽는 순간 조건문을 머릿속에 떠올릴 수 밖에 없다. 생각한 내용을 뒤로 미루기 보다는 생각한 내용을 먼저 처리하도록 만드는 코드가 자연스럽다.
 
-다음 예제는 쿼리 파라메터 "expand_all"의 값이 있는지 확인하는 코드로 관심을 끄는 주제이다.
+다음 예제는 쿼리 파라메터 "with_detail"의 값이 있는지 확인하는 코드로 관심을 끄는 주제이다.
 
 👎 Bad
 
 ```php
-if (!$url.hasQueryParameter("expand_all")) {
-    $response.render(items);
-    ...
+if ($request->query('with_detail')) {
+    $users = User::query()->limit(100)->get();
 } else {
-    for ($i = 0; 1 < $items.size(); $i++) {
-        $items[$i].expand();
-    }
-    ...
+    $users = User::query()->withUserDetail()->limit(100)->get();
 }
+return view('users', ['users' => $users]);
 ```
 
 쿼리 파라메터가 없을 때 처리하는 코드가 위에 있으므로 먼저 읽게 된다. 조건문의 주제와 연관성이 떨어진 처리를 하기 때문에 주의가 분산된다.
@@ -129,15 +126,12 @@ if (!$url.hasQueryParameter("expand_all")) {
 👍 Good
 
 ```php
-if ($url.hasQueryParameter("expand_all") ) {
-    for ($i = 0; 1 < $items.size(); $i++) {
-        $items[$i].expand();
-    }
-    ...
+if ($request->query('with_detail')) {
+    $users = User::query()->withUserDetail()->limit(100)->get();
 } else {
-    $response.render(items);
-    ...
+    $users = User::query()->limit(100)->get();
 }
+return view('users', ['users' => $users]);
 ```
 
 쿼리 파라메터가 있을 때 처리하는 코드가 위에 있으므로 먼저 읽게 된다. 조건문의 주제와 연관성이 있기 때문에 집중할 수 있고, 조건문의 주제와 떨어진 것은 else로 거리가 떨어진 곳에 위치하므로 연관성이 떨어져 있다고 자연스럽게 생각할 수 있다.
@@ -188,7 +182,7 @@ if 블록과 else 블록에서 처리하는 동작이 어떤 차이를 갖는지
 
 ## do while
 
-do ... while은 한 번 실행을 하고, while 조건에 맞으면 또 실행하는 구문이며, while 구문은 조건에 맞을 때 또 실행하는 구문이다.
+do ... while은 한 번 실행을 하고, while 조건에 맞으면 또 실행하는 구문이며, while 구문은 조건에 맞을 때 또 실행하는 구문이다.
 
 do ... while은 조건에 관계 없이 반드시 한 번은 실행되지만 while은 조건에 맞지 않으면 한 번도 실행되지 않는 문법이다.
 
@@ -370,7 +364,7 @@ foreach ($results as $result) {
 ```
 
 ## 흐름
-
+
 일반적으로 코드는 위에서 아래로 읽을 수 있도록 작성된다.
 
 exec를 통한 외부 프로세스 실행, goto 문, 스레드, 예외, (통신 등의) 비동기 등의 코드는 위에서 아래로의 흐름이 아닌 흐름의 코드를 만들 수 있기 때문에 작성 시 주의해야 한다.
