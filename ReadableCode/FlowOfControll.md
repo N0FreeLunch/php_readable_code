@@ -60,7 +60,7 @@ while ($bytes_expected > $bytes_received) {
 
 👌 SOSO
 
-```
+```php
 if ($var === null) {
     // ...
 }
@@ -70,7 +70,7 @@ if ($var === null) {
 
 👍 Good
 
-```
+```php
 if (null === $var) {
     // ...
 }
@@ -221,30 +221,34 @@ public function ListHasNode(Node $node, string $name, int $max_length) {
 👎 Bad
 
 ```php
-function Contains(string $str, string $substr) {
-    $result = false;
-    
-    if ($str !== null && $substr !== null) {
-        if ($substr === '') {
-            $result = true;
-        } else {
-            ...
-            $result = (strpos($str, $substr) !== false);
+$tryTochangeToContract = function (User $user): bool {
+    if ($user->isActive()) {
+        if ($user->paymentMethodRegistered()) {
+            if ($user->isPriceSet()) {
+                if ($user->isApproved()) {
+                    $user->changeToContractStatus();
+                    return true;
+                }
+            }
         }
     }
-    
-    return $result;
-}
+
+    return false;
+};
 ```
 
 👍 Good
 
 ```php
-function Contains(string $str, string $substr) {
-    if ($str === null || $substr === null) return false;
-    if ($substr === '') return true;
-    ...
-}
+$tryTochangeToContract = function (User $user): bool {
+    if (!$user->isActive()) return false;
+    if (!$user->paymentMethodRegistered()) return false;
+    if (!$user->isPriceSet()) return false;
+    if (!$user->isApproved()) return false;
+
+    $user->changeToContractStatus();
+    return true;
+};
 ```
 
 ## goto
