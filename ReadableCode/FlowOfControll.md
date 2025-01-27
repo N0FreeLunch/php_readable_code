@@ -10,6 +10,7 @@
 
 ```php
 if ($length >= 10) {
+    // ...
 }
 ```
 - 길이가 10 보다 크다.
@@ -19,6 +20,7 @@ if ($length >= 10) {
 
 ```php
 if (10 <= $length) {
+    // ...
 }
 ```
 - 10 보다 큰 길이.
@@ -32,7 +34,7 @@ if (10 <= $length) {
 
 ```php
 while ($bytes_received < $bytes_expected) {
-    ...
+    // ...
 }
 ```
 
@@ -42,7 +44,7 @@ while ($bytes_received < $bytes_expected) {
 
 ```php
 while ($bytes_expected > $bytes_received) {
-    ...
+    // ...
 }
 ```
 
@@ -60,7 +62,7 @@ while ($bytes_expected > $bytes_received) {
 
 ```
 if ($var === null) {
-    ...
+    // ...
 }
 ```
 
@@ -70,7 +72,7 @@ if ($var === null) {
 
 ```
 if (null === $var) {
-    ...
+    // ...
 }
 ```
 
@@ -269,7 +271,7 @@ $sentence .= $inputValue:
 
 위에서 아래로 순차적으로 읽으면 데이터 변경을 하지 않는 경우도 데이터 변경 코드를 읽어야 한다.
 
-👎 Good
+👍 Good
 
 ```php
 $sentence = '';
