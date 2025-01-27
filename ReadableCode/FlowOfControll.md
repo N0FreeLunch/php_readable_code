@@ -113,7 +113,7 @@ else 문의 분기 조건을 확인하기 위해서는 if 문의 조건을 확�
 👎 Bad
 
 ```php
-if ($request->query('with_detail')) {
+if (!$request->query('with_detail')) {
     $users = User::query()->limit(100)->get();
 } else {
     $users = User::query()->withUserDetail()->limit(100)->get();
