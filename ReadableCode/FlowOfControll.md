@@ -276,9 +276,12 @@ $sentence .= $inputValue:
 👍 Good
 
 ```php
+
+
+
 if (
     is_numeric($inputValue)
-    || $inputValue === ' '
+    || preg_match('/^\s*$/', $inputValue)
     // ...
 ) goto not_chnage;
 
