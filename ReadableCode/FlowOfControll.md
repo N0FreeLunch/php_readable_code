@@ -9,22 +9,22 @@
 👎 Bad
 
 ```php
-if ($length >= 10) {
-    // ...
-}
-```
-- 길이가 10 보다 크다.
-- 무엇(길이가), 어떻게(10 보다 크다)의 순이다.
-
-👍 Good
-
-```php
 if (10 <= $length) {
     // ...
 }
 ```
 - 10 보다 큰 길이.
 - 어떻게(10 보다 큰), 무엇(길이)의 순이다.
+
+👍 Good
+
+```php
+if ($length >= 10) {
+    // ...
+}
+```
+- 길이가 10 보다 크다.
+- 무엇(길이가), 어떻게(10 보다 크다)의 순이다.
 
 코드를 적는 순서에 따라 생각되는 언어의 표현이 달라진다. 무엇을 어떻게로 읽히도록 코드를 적는 편이 좋다.
 
@@ -54,7 +54,7 @@ while ($bytes_expected > $bytes_received) {
 
 ## Yoda기법
 
-요다 기법은 문장의 단어의 순서을 이상하게 바꾸어 말하는 특징에서 나온 용어다.
+요다 기법은 요다가 문장의 단어 순서을 이상하게 바꾸어 말하는 특징에서 나온 용어다.
 
 대입을 하는 `=` 문법과 비교를 하는 `==` 또는 `===` 문법을 사용할 때 코딩의 실수를 방지하기 위해서 값을 왼쪽에 변수를 오른쪽에 배치하는 코딩 스타일이다.
 
@@ -193,26 +193,26 @@ do ... while은 조건에 관계 없이 반드시 한 번은 실행되지만 whi
 👎 Bad
 
 ```php
-public function ListHasNode(Node $node, string $name, int $max_length) {
-   do {
-       if ($node->name() === $name) return true;
-       $node = $node->next();
-   } while ($node !== null && $max_length-- > 0);
-   return false;
-}
+$i = 1;
+do {
+    echo $i;
+    $i++;
+} while ($i <= 10);
 ```
+
+- 위에서 아래로 코드를 읽으면서 while의 조건문을 보고 do 블록을 한 번 더 읽게 된다. do ... while 구문은 조건문에 관계 없이 반드시 한 번 실행해야 부분을 강조할 때만 사용하자.
 
 👍 Good
 
 ```php
-public function ListHasNode(Node $node, string $name, int $max_length) {
-   while ($node !== null && $max_length-- > 0) {
-       if ($node->name() === $name) return true;
-       $node = $node->next();
-   }
-   return false;
+$i = 1;
+while ($i <= 10) {
+    echo $i;
+    $i++;
 }
 ```
+
+- 조건이 먼저 나오기 때문에 while 블록을 한 번만 읽어도 충분하다.
 
 ## 얼리 리턴 사용하기
 
@@ -260,13 +260,11 @@ goto 문의 문제점은 코드가 어디로 이동할지 파악하기 어렵다
 👎 Bad
 
 ```php
-$sentence = '';
+$sentence = str_replace('str', 'string', $inputValue);
 
-$sentence .= str_replace('str', 'string', $inputValue);
+$sentence = str_replace('arr', 'array', $sentence);
 
-$sentence .= str_replace('arr', 'array', $inputValue);
-
-$sentence .= str_replace('int', 'integer', $inputValue);
+$sentence = str_replace('int', 'integer', $sentence);
 
 // ...
 
@@ -278,94 +276,81 @@ $sentence .= $inputValue:
 👍 Good
 
 ```php
-$sentence = '';
-
 if (
     is_numeric($inputValue)
-    || $inputValue === ''
+    || $inputValue === ' '
     // ...
 ) goto not_chnage;
 
-$sentence .= str_replace('str', 'string', $inputValue);
+$sentence = str_replace('str', 'string', $inputValue);
 
-$sentence .= str_replace('arr', 'array', $inputValue);
+$sentence = str_replace('arr', 'array', $sentence);
 
-$sentence .= str_replace('int', 'integer', $inputValue);
+$sentence = str_replace('int', 'integer', $sentence);
 
 // ...
 
 not_chnage:
 
-$sentence .= $inputValue:
+return $sentence ??= $inputValue;
 ```
 
 특정한 조건에 대해서는 다음 코드를 읽을 필요가 없다는 것을 알려주기 위해서 goto문을 사용할 수도 있다.
+
+### 참고
+
+물론 php에서는 다음과 같은 코드를 만들 수 있지만 goto 문을 쓰는 예제를 만들기 위해 위와 같은 코드를 작성하였다.
+
+```php
+$replaceWordMap = [
+    'str' => 'string',
+    'arr' => 'array',
+    'int' => 'integer',
+    // ...
+]
+
+$sentence = str_replace(array_keys($replaceWordMap), array_values($replaceWordMap), $inputValue);
+```
 
 ## 얕은 중첩
 
 👎 Bad
 
 ```php
-f ($user_result === SUCCESS) {
-    if ($permission_result !== SUCCESS) {
-        $reply->writeErrors("error reading permissions");
-        $reply->done();
-        return;
-    }
-    $reply->writeErrors("");
-} else {
-    $reply->writeErrors($user_result);
-}
-$reply->done();
-```
-
-👍 Good
-
-```php
-if ($user_result !== SUCCESS) {
-    $reply->writeErrors($user_result);
-    $reply->done();
-    return;
-}
-
-if ($permission_result !== SUCCESS) {
-    $reply->writeErrors($permission_result);
-    $reply->done();
-    return;
-}
-
-$reply->writeErrors();
-$reply->done();
-```
-
-## loop의 중첩
-
-👎 Bad
-
-```php
-$null_count = 0;
-foreach ($results as $result) {
-    if ($result !== null) {
-        $null_count++;
-        if ($result->name !== "") {
-            echo "Considering candidate...\n";
-        }
-    }
+$arr = range(1, 30);
+foreach ($arr as &$value) {
+	if($value % 2 === 0) {
+		if($value % 4 ===0) {
+			if($value % 8 ===0) {
+				echo "x8: ".$value.PHP_EOL;	
+			} else {
+				echo "x4: ".$value.PHP_EOL;	
+			}	
+		} else {
+		    echo "x2: ".$value.PHP_EOL;	
+		}
+	}
 }
 ```
 
 👍 Good
 
 ```php
-$non_null_count = 0;
-foreach ($results as $result) { 
-    if ($result === null) continue;
-    
-    $non_null_count++;
-    
-    if (empty($result->name)) continue;
-    
-    echo "Considering candidate...\n"; 
+$arr = range(1, 30);
+foreach ($arr as &$value) {
+	if ($value % 8 ===0) {
+		echo "x8: ".$value.PHP_EOL;
+		continue;
+	}
+	
+	if ($value % 4 ===0) {
+		echo "x4: ".$value.PHP_EOL;
+		continue;
+	}
+	
+	if ($value % 2 === 0) {
+		echo "x2: ".$value.PHP_EOL;	
+	}
 }
 ```
 
