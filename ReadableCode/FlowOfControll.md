@@ -58,7 +58,7 @@ while ($bytes_expected > $bytes_received) {
 
 대입을 하는 `=` 문법과 비교를 하는 `==` 또는 `===` 문법을 사용할 때 코딩의 실수를 방지하기 위해서 값을 왼쪽에 변수를 오른쪽에 배치하는 코딩 스타일이다.
 
-👌 SOSO
+👌 Good
 
 ```php
 if ($var === null) {
@@ -260,7 +260,9 @@ goto 문의 문제점은 코드가 어디로 이동할지 파악하기 어렵다
 👎 Bad
 
 ```php
-$sentence = str_replace('str', 'string', $inputValue);
+$sentence = $inputValue;
+
+$sentence = str_replace('str', 'string', $sentence);
 
 $sentence = str_replace('arr', 'array', $sentence);
 
@@ -268,7 +270,7 @@ $sentence = str_replace('int', 'integer', $sentence);
 
 // ...
 
-$sentence .= $inputValue:
+return $sentence:
 ```
 
 위에서 아래로 순차적으로 읽으면 데이터 변경을 하지 않는 경우도 데이터 변경 코드를 읽어야 한다.
@@ -276,16 +278,17 @@ $sentence .= $inputValue:
 👍 Good
 
 ```php
-
-
+$sentence = $inputValue;
 
 if (
     is_numeric($inputValue)
     || preg_match('/^\s*$/', $inputValue)
     // ...
-) goto not_chnage;
+) {
+    goto not_chnage;
+}
 
-$sentence = str_replace('str', 'string', $inputValue);
+$sentence = str_replace('str', 'string', $sentence);
 
 $sentence = str_replace('arr', 'array', $sentence);
 
@@ -295,7 +298,7 @@ $sentence = str_replace('int', 'integer', $sentence);
 
 not_chnage:
 
-return $sentence ??= $inputValue;
+return $sentence;
 ```
 
 특정한 조건에 대해서는 다음 코드를 읽을 필요가 없다는 것을 알려주기 위해서 goto문을 사용할 수도 있다.
@@ -313,6 +316,8 @@ $replaceWordMap = [
 ]
 
 $sentence = str_replace(array_keys($replaceWordMap), array_values($replaceWordMap), $inputValue);
+
+return $sentence
 ```
 
 ## 얕은 중첩
@@ -322,17 +327,17 @@ $sentence = str_replace(array_keys($replaceWordMap), array_values($replaceWordMa
 ```php
 $arr = range(1, 30);
 foreach ($arr as &$value) {
-	if($value % 2 === 0) {
-		if($value % 4 ===0) {
-			if($value % 8 ===0) {
-				echo "x8: ".$value.PHP_EOL;	
-			} else {
-				echo "x4: ".$value.PHP_EOL;	
-			}	
-		} else {
-		    echo "x2: ".$value.PHP_EOL;	
-		}
-	}
+    if($value % 2 === 0) {
+        if($value % 4 ===0) {
+            if($value % 8 ===0) {
+                echo "x8: ".$value.PHP_EOL;	
+            } else {
+                echo "x4: ".$value.PHP_EOL;	
+            }	
+        } else {
+            echo "x2: ".$value.PHP_EOL;	
+        }
+    }
 }
 ```
 
@@ -341,19 +346,19 @@ foreach ($arr as &$value) {
 ```php
 $arr = range(1, 30);
 foreach ($arr as &$value) {
-	if ($value % 8 ===0) {
-		echo "x8: ".$value.PHP_EOL;
-		continue;
-	}
+    if ($value % 8 ===0) {
+        echo "x8: ".$value.PHP_EOL;
+        continue;
+    }
 	
-	if ($value % 4 ===0) {
-		echo "x4: ".$value.PHP_EOL;
-		continue;
-	}
+    if ($value % 4 ===0) {
+        echo "x4: ".$value.PHP_EOL;
+        continue;
+    }
 	
-	if ($value % 2 === 0) {
-		echo "x2: ".$value.PHP_EOL;	
-	}
+    if ($value % 2 === 0) {
+        echo "x2: ".$value.PHP_EOL;	
+    }
 }
 ```
 
